@@ -1,45 +1,37 @@
 class Solution {
-   public int[] sortJumbled(int[] mapping, int[] nums) {
-        int n = nums.length;
 
-        // Array to store mapped values and their original indices
-        int[][] mappedWithIndex = new int[n][2];
+    public int[] sortJumbled(int[] mapping, int[] nums) {
+        ArrayList<Integer[]> storePairs = new ArrayList<>();
 
-        for (int i = 0; i < n; ++i) {
-            int originalNum = nums[i];
-            int mappedNum = 0;
-            int placeValue = 1;
-
-            // If the number is 0, map it directly
-            if (originalNum == 0) {
-                mappedNum = mapping[0];
-            } else {
-                // Build the mapped number by mapping each digit
-                StringBuilder mappedBuilder = new StringBuilder();
-                while (originalNum > 0) {
-                    int digit = originalNum % 10;
-                    mappedBuilder.append(mapping[digit]);
-                    originalNum /= 10;
-                }
-                // Reverse the mapped number to get the correct order
-                mappedNum = Integer.parseInt(mappedBuilder.reverse().toString());
+        for (int i = 0; i < nums.length; ++i) {
+            // Convert current value to string
+            String number = Integer.toString(nums[i]);
+            String formed = "";
+            for (int j = 0; j < number.length(); ++j) {
+                formed = formed +
+                Integer.toString(mapping[number.charAt(j) - '0']);
             }
-
-            mappedWithIndex[i] = new int[]{mappedNum, i};
+            // Store the mapped value.
+            int mappedValue = Integer.parseInt(formed);
+            // Push a pair consisting of mapped value and original value's index.
+            storePairs.add(new Integer[] { mappedValue, i });
         }
 
-        // Sort by mapped number, then by original index if mapped numbers are equal
-        Arrays.sort(mappedWithIndex, (a, b) -> 
-            a[0] == b[0] ? a[1] - b[1] : Integer.compare(a[0], b[0])
+        // Sort the array in non-decreasing order by the first value (default).
+        Collections.sort(
+            storePairs,
+            new Comparator<Integer[]>() {
+                @Override
+                public int compare(Integer[] o1, Integer[] o2) {
+                    return o1[0].compareTo(o2[0]);
+                }
+            }
         );
 
-        // Create the result array
-        int[] sortedArray = new int[n];
-        for (int i = 0; i < n; ++i) {
-            sortedArray[i] = nums[mappedWithIndex[i][1]];
+        int[] answer = new int[nums.length];
+        for (int i = 0; i < storePairs.size(); i++) {
+            answer[i] = nums[storePairs.get(i)[1]];
         }
-
-        return sortedArray;
+        return answer;
     }
-
 }
