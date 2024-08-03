@@ -10,8 +10,6 @@ class Solution {
        Arrays.sort(target);
         Arrays.sort(arr);
  
-        
-        
       for(int i=0;i<n;i++){
           if(target[i]!= arr[i]){
               return false;
