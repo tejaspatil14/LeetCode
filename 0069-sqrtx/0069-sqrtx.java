@@ -1,23 +1,26 @@
 class Solution {
     public int mySqrt(int x) {
-        if (x == 0 || x == 1)
-            return x;
+        if (x == 0 || x == 1) return x;
 
-        int start = 1;
-        int end = x;
-        int mid = -1;
-
-        while (start <= end) {
-            mid = start + (end - start) / 2;
-
-            if ((long) mid * mid > (long) x)
-                end = mid - 1;
-            else if (mid * mid == x)
-                return mid;
-            else
-                start = mid + 1;
+        int y = x;
+        while (true) {
+            y = y / 2;
+            if ((y * y) < 0 || (y * y) / y != y) continue; // handle int overflow
+            if ((y * y) > 0 && (y * y) <= x) break;
         }
 
-        return Math.round(end);
+        if (y * y == x) return y;
+
+        int j = x - (y * y);
+        while (true) {
+            j = j - (y + y + 1);
+            if (j >= 0) {
+                y = y + 1;
+            } else {
+                break;
+            }
+        }
+
+        return y;
     }
 }
